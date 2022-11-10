@@ -1,54 +1,15 @@
 let shop = document.getElementById("shop");
-let basket = [];
-
-let shopItemData = [
-  {
-    id: "1234",
-    name: "AIR JORDAN 1 RETRO HIGH TWIST W",
-    price: "450",
-    description:
-      "HYPESTEIN guarantees 100% authenticity of this or any other product found via our store, following the Swedish and EU laws on authentic goods.",
-    quantity: 5,
-    img: "https://cdn.shopify.com/s/files/1/2200/1967/products/air-jordan-1-retro-high-twist-w-sneakers-nike_800x.jpg?v=1571712087",
-  },
-  {
-    id: "1235",
-    name: "Nike Dunk High Retro",
-    price: "550",
-    description:
-      "Created for the hardwood but taken to the streets, the '80s b-ball icon returns with classic details and throwback hoops flair. Channeling vintage style back onto the streets, the padded, high-top collar of the Nike Dunk High lets you take your game anywhere—in comfort",
-    quantity: 10,
-    img: "https://images.footlocker.com/is/image/FLEU/244101498004_01?wid=2000&hei=2000&fmt=png-alpha",
-  },
-  {
-    id: "1236",
-    name: "Nike Dunk Hight Lakers",
-    price: "680",
-    description:
-      "With its classic basketball design, the Nike Dunk High Retro brings vintage '80s style back to the streets.The flawless leather upper sports a slight sheen and durable overlays reminiscent of '80s basketball. The padded, high-top collar provides a classic look while offering",
-    quantity: 5,
-    img: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQcrWmq1xfDImNh3W2oIFS-xNXYTMkP7AwpD69Y4r6uedDvnrOFTvdpZoxyewSmvxYgAPjNmKDAhqya3A_xrOON8C73bN7DUrsa_F1igLEurBEBPmLRqy-y",
-  },
-  {
-    id: "1237",
-    name: "adidas originals S.E.E.D. x Womens",
-    price: "350",
-    description:
-      "adidas originals S.E.E.D. x Womens WMNS Forum Mid 'Multi' Skate Shoes (SNKR/Women's/Multicolor) GV7673 (US 5½)",
-    quantity: 5,
-    img: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRa04uJe3zWhqGEDDuiezlrQu14b7PeGSuipgxVQK_zEAoMbD_1RxYlgdH1uCkpjTpatQU5VKj3GzG_Kyl8xZJQZi4Cb_GO2yFxxj11TYz9ASU5pJ-q48nRVw",
-  },
-];
+let basket = JSON.parse(localStorage.getItem("cartItem")) || [];
 
 // /////////////////
 // generating data from api to products list.
 // /////////////////
-
 let generateShop = () => {
   return (shop.innerHTML = shopItemData
-    .map((item) => {
-      let { id, name, price, description, quantity, img } = item;
-      return `<div class="item" key=${id}>
+    .map((x) => {
+      let { id, name, price, description, quantity, img } = x;
+      let search = basket.find((x) => x.id === id) || [];
+      return `<div class="item" key=${id} id=product-id-${id}>
 <img width="215"
     src=${img}
     alt=${name}>
@@ -59,7 +20,9 @@ let generateShop = () => {
 <h2 class="item-price">$${price}</h2>
 <div class="item-buttons">
 <i onclick= "decreaseQuantity(${id})" class="bi bi-dash-lg"></i>
-    <div id=${id} class="quantity">${quantity}</div>
+    <div id=${id} class="quantity"> ${
+        search.item === undefined ? 0 : search.item
+      }</div>
     <i onclick="increaseQuantity(${id})" class="bi bi-plus-lg"></i>
 </div>
 </div>
@@ -77,8 +40,7 @@ generateShop();
 
 let increaseQuantity = (id) => {
   let selectedItem = id;
-  let search = basket.find((item) => item.id === selectedItem);
-
+  let search = basket.find((x) => x.id === selectedItem);
   if (search === undefined) {
     basket.push({
       id: selectedItem,
@@ -88,40 +50,45 @@ let increaseQuantity = (id) => {
     search.item += 1;
   }
 
-//   console.log(basket);
   updateQuantity(selectedItem);
+  // console.log(basket);
+  localStorage.setItem("cartItem", JSON.stringify(basket));
 };
-
 
 // /////////////////
 // removing quantity from cart
 ///////////
 let decreaseQuantity = (id) => {
   let selectedItem = id;
-  let search = basket.find((item) => item.id === selectedItem);
+  let search = basket.find((x) => x.id === selectedItem);
 
-  if (search === 0) return;
+  if (search === undefined) return;
+  else if (search.item === 0) return;
   else {
     search.item -= 1;
   }
-
-//   console.log(basket);
+  
   updateQuantity(selectedItem);
+  basket = basket.filter((x) => x.item !== 0);
+  localStorage.setItem("cartItem", JSON.stringify(basket));
+  // console.log(basket);
 };
-
 
 // /////////////////
 // update cart with quantity
 //// /////////////////
 let updateQuantity = (id) => {
-
-    let search = basket.find((item) => item.id === id);
-//   console.log(search.item);
+  let search = basket.find((x) => x.id === id);
+  // console.log(search.item)
   document.getElementById(id).innerHTML = search.item;
-  calculate();
+  calculation();
 };
 
-let calculate = () => {
-    let cartIcon = document.getElementById("cart-amount")
-cartIcon.innerHTML = basket.map(item => item.item).reduce((x,y) => x + y,0);
-}
+// ading totoal item in cart for checkout.
+let calculation = () => {
+  //  console.log("calculation...");
+  let cartIcon = document.getElementById("cart-amount");
+  cartIcon.innerHTML = basket.map((x) => x.item).reduce((x, y) => x + y, 0);
+};
+
+calculation();
