@@ -34,7 +34,7 @@ return shoppingCart.innerHTML = basket.map((x) => {
     <td>
     <div class="item-buttons">
     <button class="btndelt"> 
-    delete
+   Remove
     </button>
  
 </div>
