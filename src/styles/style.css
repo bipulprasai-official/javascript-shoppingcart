@@ -108,7 +108,7 @@ a {
     margin-left: 0.5rem;
     margin-right: 0.5rem;
     font-size: 10px;
-    background-color: antiquewhite;
+    background-color:#f1f2f6;
     padding: 0.3rem;
     cursor: pointer;
   
@@ -177,10 +177,21 @@ a {
   }
   
   .checkout {
-    background-color: green;
+    background-color:#10ac84;
+    color: whitesmoke;
+    padding: 5px;
+    text-align:center;
+    cursor: pointer;
+    border: none;
   }
   .removeAll {
-    background-color: red;
+    background-color: #ff595e;
+    border: none;
+    color: whitesmoke;
+    padding: 5px;
+    text-align:center;
+    cursor: pointer;
+  
   }
   .bi-x-lg {
     color: red;
@@ -251,4 +262,22 @@ a {
     padding: 5px;
     text-align:center;
     cursor: pointer;
+    z-index: 999;
+  }
+
+  .total{
+    background-color:whitesmoke;
+    width: 100%;
+    min-height: 100px;
+    margin-top: 1.5rem;
+    border-top: 2px solid #dddddd;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+  .btntotal{
+    display: flex;
+    flex-direction: row;
+    justify-content:space-around;
+    align-items:center;
+
   }
